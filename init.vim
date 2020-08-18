@@ -168,7 +168,7 @@ Plug 'tpope/vim-rhubarb'
 " Navigation
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
-Plug 'pbogut/fzf-mru.vim'
+Plug 'lambdalisue/fern.vim'
 
 Plug 'justinmk/vim-sneak'       " Get around in your files.
 Plug 'farmergreg/vim-lastplace' " open files at the last edited place
@@ -347,6 +347,10 @@ omap T <Plug>Sneak_T
 " -----------------------------------------------------------------------------
 " File Management.
 " -----------------------------------------------------------------------------
+
+" Open fern.vim with <C-n>
+map <C-n> :Fern . -reveal=%
+
 
 " Close the currently focused buffer.
 nnoremap <leader>bd :bd<cr>
