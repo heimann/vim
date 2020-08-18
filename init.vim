@@ -191,6 +191,9 @@ Plug 'sheerun/vim-polyglot'
 " Knowledge management.
 Plug 'vimwiki/vimwiki'
 Plug 'michal-h21/vim-zettel'
+
+" Neovim specific hotness
+Plug 'kassio/neoterm'
 call plug#end()
 
 if plug_install
@@ -301,6 +304,12 @@ augroup autocmds
 	autocmd TermOpen  *  :call s:OnTermOpen(+expand('<abuf>'))
 augroup end
 
+" Neoterm bindings and config
+nnoremap <leader>tm :Ttoggle<cr>
+vnoremap <leader>tr :TREPLSendSelection<cr>
+nnoremap <leader>tr :TREPLSendFile<cr>
+let g:neoterm_default_mod = "botright"
+let g:neoterm_autoscroll = 1
 
 " -----------------------------------------------------------------------------
 " Navigation.
