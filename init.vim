@@ -133,7 +133,6 @@ let mapleader = "\<Space>"
 filetype indent plugin on
 
 
-
 " -----------------------------------------------------------------------------
 " Packages & Plug Setup.
 "
@@ -178,7 +177,6 @@ Plug 'heimann/vim-slash'        " improve / search experience
 " Navigate between tmux and vim splits seamlessly
 Plug 'christoomey/vim-tmux-navigator'
 
-
 " Fancy Language Server Stuff.
 " Here be dragons, but this is what gets me around my projects the quickest.
 " I recommend spending some time getting to know these tools.
@@ -186,6 +184,10 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'antoinemadec/coc-fzf'
 
 Plug 'ludovicchabant/vim-gutentags' "For tag management
+
+" Knowledge management.
+Plug 'vimwiki/vimwiki'
+Plug 'michal-h21/vim-zettel'
 call plug#end()
 
 if plug_install
@@ -355,7 +357,7 @@ nnoremap <leader>sm :FZFMru<cr>
 let $FZF_DEFAULT_COMMAND = 'rg --files --hidden'
 let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6 } }
 
-let g:fzf_mru_relative = 1
+let g:fzf_mru_relative = 0
 
 " Find word under cursor in project.
 nmap <leader>* :Rg <c-r>=expand("<cword>")<cr><cr>
@@ -376,6 +378,9 @@ nnoremap <leader>hN :GitGutterPrevHunk<cr>
 nnoremap <leader>hn :GitGutterNextHunk<cr>
 
 let g:gitgutter_highlight_linenrs=1
+
+let g:vimwiki_list = [{'path':'~/Nextcloud/wiki/', 'syntax': 'markdown', 'ext': '.md'}]
+let g:zettel_fzf_command = "rg --column --line-number --ignore-case --no-heading --color=always "
 
 " -----------------------------------------------------------------------------
 " COC and LSP Related Configuration
