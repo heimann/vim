@@ -45,7 +45,10 @@ set cmdheight=2
 set shortmess+=c
 
 " You will have bad experience for diagnostic messages when it's default 4000.
-set updatetime=300
+set updatetime=100
+
+" splits
+ set diffopt+=vertical
 
 syntax on
 set encoding=utf-8
@@ -168,12 +171,21 @@ Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'pbogut/fzf-mru.vim'
 
+Plug 'justinmk/vim-sneak'       " Get around in your files.
+Plug 'farmergreg/vim-lastplace' " open files at the last edited place
+Plug 'heimann/vim-slash'        " improve / search experience
+
+" Navigate between tmux and vim splits seamlessly
+Plug 'christoomey/vim-tmux-navigator'
+
+
 " Fancy Language Server Stuff.
 " Here be dragons, but this is what gets me around my projects the quickest.
 " I recommend spending some time getting to know these tools.
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'antoinemadec/coc-fzf'
 
+Plug 'ludovicchabant/vim-gutentags' "For tag management
 call plug#end()
 
 if plug_install
@@ -311,6 +323,22 @@ tnoremap <c-l> <C-\><C-N><c-w>l
 " Use tab to toggle between most recently looked at buffers.
 nmap <Tab> :b#<CR>
 
+" SNEAK!
+"replace 'f' with 1-char Sneak
+nmap f <Plug>Sneak_f
+nmap F <Plug>Sneak_F
+xmap f <Plug>Sneak_f
+xmap F <Plug>Sneak_F
+omap f <Plug>Sneak_f
+omap F <Plug>Sneak_F
+""replace 't' with 1-char Sneak
+nmap t <Plug>Sneak_t
+nmap T <Plug>Sneak_T
+xmap t <Plug>Sneak_t
+xmap T <Plug>Sneak_T
+omap t <Plug>Sneak_t
+omap T <Plug>Sneak_T
+
 " -----------------------------------------------------------------------------
 " File Management.
 " -----------------------------------------------------------------------------
@@ -331,6 +359,23 @@ let g:fzf_mru_relative = 1
 
 " Find word under cursor in project.
 nmap <leader>* :Rg <c-r>=expand("<cword>")<cr><cr>
+
+" Git bindings!
+nnoremap <leader>gs :G<cr><c-n><c-n><c-n>
+nnoremap <leader>gp :Gpush<cr>
+
+nnoremap <leader>gr :Git stat<cr>
+
+nnoremap <leader>gh :Gbrowse!<cr>
+vnoremap <leader>gh :Gbrowse!<cr>
+nnoremap <leader>gd :Gdiff master<cr>zR
+
+nnoremap <leader>gt <Plug>(git-time-lapse)
+
+nnoremap <leader>hN :GitGutterPrevHunk<cr>
+nnoremap <leader>hn :GitGutterNextHunk<cr>
+
+let g:gitgutter_highlight_linenrs=1
 
 " -----------------------------------------------------------------------------
 " COC and LSP Related Configuration
