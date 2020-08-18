@@ -358,7 +358,12 @@ omap T <Plug>Sneak_T
 " -----------------------------------------------------------------------------
 
 " Open fern.vim with <C-n>
-map <C-n> :Fern . -reveal=%
+map <C-n> :Fern . -reveal=% -drawer -toggle<CR>
+
+" Close Fern after opening a file
+nmap <buffer><silent> <Plug>(fern-my-open-and-close)
+      \ <Plug>(fern-action-open)
+      \ :<C-u>FernDo close -drawer -stay<CR>
 
 
 " Close the currently focused buffer.
