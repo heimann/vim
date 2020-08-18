@@ -185,6 +185,9 @@ Plug 'antoinemadec/coc-fzf'
 
 Plug 'ludovicchabant/vim-gutentags' "For tag management
 
+" Language Support
+Plug 'sheerun/vim-polyglot'
+
 " Knowledge management.
 Plug 'vimwiki/vimwiki'
 Plug 'michal-h21/vim-zettel'
