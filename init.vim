@@ -353,6 +353,10 @@ xmap T <Plug>Sneak_T
 omap t <Plug>Sneak_t
 omap T <Plug>Sneak_T
 
+" Sneak config
+let g:sneak#label = 1
+let g:sneak#use_ic_scs = 1
+
 " -----------------------------------------------------------------------------
 " File Management.
 " -----------------------------------------------------------------------------
