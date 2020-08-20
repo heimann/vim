@@ -362,7 +362,7 @@ let g:sneak#use_ic_scs = 1
 " -----------------------------------------------------------------------------
 
 " Open fern.vim with <C-n>
-map <C-n> :Fern . -reveal=% -drawer -toggle<CR>
+map <C-n> :Fern . -reveal=%<CR>
 
 " Close Fern after opening a file
 nmap <buffer><silent> <Plug>(fern-my-open-and-close)
