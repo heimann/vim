@@ -48,7 +48,7 @@ set shortmess+=c
 set updatetime=100
 
 " splits
- set diffopt+=vertical
+set diffopt+=vertical
 
 syntax on
 set encoding=utf-8
