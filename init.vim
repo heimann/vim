@@ -377,6 +377,7 @@ nnoremap <leader>bd :bd<cr>
 nnoremap <leader>sb :Buffers<cr>
 nnoremap <leader>sp :Files<cr>
 nnoremap <leader>sm :History<cr>
+nnoremap <leader>sf :Rg<cr>
 
 " FZF Specific Configuration.
 let $FZF_DEFAULT_COMMAND = 'rg --files --hidden'
