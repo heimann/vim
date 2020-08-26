@@ -337,6 +337,9 @@ tnoremap <c-l> <C-\><C-N><c-w>l
 " Use tab to toggle between most recently looked at buffers.
 nmap <Tab> :b#<CR>
 
+" Use leader space to get rid of highlighting after a search)
+nmap <Leader><space> :nohl<cr>
+
 " SNEAK!
 "replace 'f' with 1-char Sneak
 nmap f <Plug>Sneak_f
