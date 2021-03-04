@@ -22,7 +22,7 @@
 "
 " In case you have any questions, please do reach out at d@dmeh.net.
 "
-" David Heimann (2020)
+" David Heimann (2021)
 " -----------------------------------------------------------------------------
 
 
@@ -159,9 +159,11 @@ call plug#begin('~/.config/nvim/plugins')
 " Plugins - Aesthetics.
 Plug 'bluz71/vim-nightfly-guicolors'
 Plug 'bronson/vim-trailing-whitespace' " Show trailing whitespace
+Plug 'tpope/vim-commentary'
 
 " Git Stuff
 Plug 'airblade/vim-gitgutter'
+Plug 'junegunn/gv.vim'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-rhubarb'
 
@@ -173,6 +175,7 @@ Plug 'lambdalisue/fern.vim'
 Plug 'justinmk/vim-sneak'       " Get around in your files.
 Plug 'farmergreg/vim-lastplace' " open files at the last edited place
 Plug 'heimann/vim-slash'        " improve / search experience
+Plug 'junegunn/vim-peekaboo'    " See registers when using `'` and `@`
 
 " Navigate between tmux and vim splits seamlessly
 Plug 'christoomey/vim-tmux-navigator'
@@ -186,7 +189,9 @@ Plug 'antoinemadec/coc-fzf'
 Plug 'ludovicchabant/vim-gutentags' "For tag management
 
 " Language Support
+Plug 'elixir-editors/vim-elixir'
 Plug 'sheerun/vim-polyglot'
+Plug 'vim-test/vim-test'       " Run test suites
 
 " Knowledge management.
 Plug 'vimwiki/vimwiki'
@@ -194,6 +199,7 @@ Plug 'michal-h21/vim-zettel'
 
 " Neovim specific hotness
 Plug 'kassio/neoterm'
+
 call plug#end()
 
 if plug_install
@@ -220,7 +226,8 @@ highlight Comment guifg=#081e2f guibg=#296596
 " See 80th column
 if (exists('+colorcolumn'))
     set colorcolumn=80
-    highlight ColorColumn guibg=#8b1e3f
+"    highlight ColorColumn guibg=#8b1e3f
+    highlight ColorColumn guibg=#000000
 endif
 
 " Extend the color column beyond 80
@@ -311,6 +318,11 @@ nnoremap <leader>tr :TREPLSendFile<cr>
 let g:neoterm_default_mod = "botright"
 let g:neoterm_autoscroll = 1
 
+" Vim-test Settings
+nnoremap <leader>tt :TestSuite<cr>
+nnoremap <leader>tf :TestFile<cr>
+let test#strategy = "neoterm"
+
 " -----------------------------------------------------------------------------
 " Navigation.
 "
@@ -363,6 +375,8 @@ let g:sneak#use_ic_scs = 1
 " -----------------------------------------------------------------------------
 " File Management.
 " -----------------------------------------------------------------------------
+
+let g:gutentags_exclude_filetypes = ['gitcommit', 'gitconfig', 'gitrebase', 'gitsendemail', 'git']
 
 " Open fern.vim with <C-n>
 map <C-n> :Fern . -reveal=%<CR>
