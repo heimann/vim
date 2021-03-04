@@ -157,20 +157,20 @@ unlet autoload_plug_path
 call plug#begin('~/.config/nvim/plugins')
 
 " Plugins - Aesthetics.
-Plug 'bluz71/vim-nightfly-guicolors'
+Plug 'wadackel/vim-dogrun'
 Plug 'bronson/vim-trailing-whitespace' " Show trailing whitespace
 Plug 'tpope/vim-commentary'
 
 " Git Stuff
 Plug 'airblade/vim-gitgutter'
-Plug 'junegunn/gv.vim'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-rhubarb'
 
-" Navigation
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plug 'junegunn/fzf.vim'
-Plug 'lambdalisue/fern.vim'
+" telescope requirements...
+Plug 'nvim-lua/popup.nvim'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim'
+Plug 'nvim-telescope/telescope-fzy-native.nvim'
 
 Plug 'justinmk/vim-sneak'       " Get around in your files.
 Plug 'farmergreg/vim-lastplace' " open files at the last edited place
@@ -179,12 +179,6 @@ Plug 'junegunn/vim-peekaboo'    " See registers when using `'` and `@`
 
 " Navigate between tmux and vim splits seamlessly
 Plug 'christoomey/vim-tmux-navigator'
-
-" Fancy Language Server Stuff.
-" Here be dragons, but this is what gets me around my projects the quickest.
-" I recommend spending some time getting to know these tools.
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'antoinemadec/coc-fzf'
 
 Plug 'ludovicchabant/vim-gutentags' "For tag management
 
@@ -217,11 +211,13 @@ unlet plug_install
 
 " I've been using nightfly for a while. I also make sure to configure the
 " colors in my terminal to use the same basic palette.
-colorscheme nightfly
+"colorscheme nightfly
+colorscheme dogrun
+
 
 " I don't like the default comment highlighting in nightfly, so this changes
 " it
-highlight Comment guifg=#081e2f guibg=#296596
+"highlight Comment guifg=#081e2f guibg=#296596
 
 " See 80th column
 if (exists('+colorcolumn'))
@@ -303,14 +299,6 @@ if has('nvim')
   tmap <C-o> <C-\><C-n>
 endif
 
-augroup autocmds
-	autocmd!
-	" Update signature help on jump placeholder (useful for floating
-	" window)
-	autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
-	autocmd TermOpen  *  :call s:OnTermOpen(+expand('<abuf>'))
-augroup end
-
 " Neoterm bindings and config
 nnoremap <leader>tm :Ttoggle<cr>
 vnoremap <leader>tr :TREPLSendSelection<cr>
@@ -378,15 +366,6 @@ let g:sneak#use_ic_scs = 1
 
 let g:gutentags_exclude_filetypes = ['gitcommit', 'gitconfig', 'gitrebase', 'gitsendemail', 'git']
 
-" Open fern.vim with <C-n>
-map <C-n> :Fern . -reveal=%<CR>
-
-" Close Fern after opening a file
-nmap <buffer><silent> <Plug>(fern-my-open-and-close)
-      \ <Plug>(fern-action-open)
-      \ :<C-u>FernDo close -drawer -stay<CR>
-
-
 " Close the currently focused buffer.
 nnoremap <leader>bd :bd<cr>
 
@@ -395,12 +374,6 @@ nnoremap <leader>sb :Buffers<cr>
 nnoremap <leader>sp :Files<cr>
 nnoremap <leader>sm :History<cr>
 nnoremap <leader>sf :Rg<cr>
-
-" FZF Specific Configuration.
-let $FZF_DEFAULT_COMMAND = 'rg --files --hidden'
-let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6 } }
-
-let g:fzf_mru_relative = 0
 
 " Find word under cursor in project.
 nmap <leader>* :Rg <c-r>=expand("<cword>")<cr><cr>
@@ -425,59 +398,3 @@ let g:gitgutter_highlight_linenrs=1
 let g:vimwiki_list = [{'path':'~/Nextcloud/wiki/', 'syntax': 'markdown', 'ext': '.md'}]
 let g:zettel_fzf_command = "rg --column --line-number --ignore-case --no-heading --color=always "
 
-" -----------------------------------------------------------------------------
-" COC and LSP Related Configuration
-"
-" -----------------------------------------------------------------------------
-
-" I used to use tagbar but this gets me more, and is quicker.
-nnoremap <silent> <leader>co  :<C-u>CocFzfList outline<CR>
-
-" Snippets and autocomplete
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? coc#_select_confirm() :
-      \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
-
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
-
-let g:coc_snippet_next = '<tab>'
-
-nnoremap <leader>es :CocCommand snippets.editSnippets<cr>
-
-" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current
-" position Coc only does snippet and additional edit on confirm.
-inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-
-" Use `[c` and `]c` to navigate diagnostics
-nmap <silent> [c <Plug>(coc-diagnostic-prev)
-nmap <silent> ]c <Plug>(coc-diagnostic-next)
-
-" Remap keys for gotos
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gD :vsp<CR><Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
-
-
-" Remap for rename current word
-nmap <leader>rn <Plug>(coc-rename)
-
-" Use K to show documentation in preview window
-nnoremap <silent> K :call <SID>show_documentation()<CR>
-
-function! s:show_documentation()
-  if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
-  else
-    call CocAction('doHover')
-  endif
-endfunction
-
-" Highlight symbol under cursor on CursorHold
-autocmd CursorHold * silent call CocActionAsync('highlight')
