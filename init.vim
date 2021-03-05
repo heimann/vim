@@ -369,10 +369,11 @@ let g:gutentags_exclude_filetypes = ['gitcommit', 'gitconfig', 'gitrebase', 'git
 nnoremap <leader>bd :bd<cr>
 
 " Navigate between files in a project!
-nnoremap <leader>sb :Buffers<cr>
-nnoremap <leader>sp :Files<cr>
-nnoremap <leader>sm :History<cr>
-nnoremap <leader>sf :Rg<cr>
+nnoremap <leader>sb :Telescope buffers<cr>
+nnoremap <leader>sp :Telescope find_files<cr>
+nnoremap <leader>sm :Telescope oldfiles<cr>
+nnoremap <leader>sf :Telescope live_grep<cr>
+nnoremap <leader>co :Telescope tags<cr>
 
 " Find word under cursor in project.
 nmap <leader>* :Rg <c-r>=expand("<cword>")<cr><cr>
@@ -397,6 +398,9 @@ let g:gitgutter_highlight_linenrs=1
 let g:vimwiki_list = [{'path':'~/Nextcloud/wiki/', 'syntax': 'markdown', 'ext': '.md'}]
 let g:zettel_fzf_command = "rg --column --line-number --ignore-case --no-heading --color=always "
 
+:lua << EOF
+  require('telescope').load_extension('fzy_native')
+EOF
 
 " LSP Stuff 
 " see: https://medium.com/swlh/neovim-lsp-dap-and-fuzzy-finder-60337ef08060
