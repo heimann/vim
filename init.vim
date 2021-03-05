@@ -206,7 +206,6 @@ unlet plug_install
 " Theming and Aesthetics.
 "
 " This section gets a little convoluted but don't fret.
-" Hold on for a second here, it's about to get kind of convoluted but don't
 " -----------------------------------------------------------------------------
 
 " I've been using nightfly for a while. I also make sure to configure the
