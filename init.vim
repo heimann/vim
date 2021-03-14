@@ -45,7 +45,7 @@ set cmdheight=2
 set shortmess+=c
 
 " You will have bad experience for diagnostic messages when it's default 4000.
-set updatetime=100
+set updatetime=50
 
 " splits
 set diffopt+=vertical
@@ -180,6 +180,9 @@ Plug 'junegunn/vim-peekaboo'    " See registers when using `'` and `@`
 " Neovim LSP
 Plug 'neovim/nvim-lspconfig'
 Plug 'nvim-lua/completion-nvim'
+
+" File Navigation
+Plug 'liuchengxu/vista.vim'
 
 " Navigate between tmux and vim splits seamlessly
 Plug 'christoomey/vim-tmux-navigator'
@@ -374,6 +377,8 @@ nnoremap <leader>sp :Telescope find_files<cr>
 nnoremap <leader>sm :Telescope oldfiles<cr>
 nnoremap <leader>sf :Telescope live_grep<cr>
 nnoremap <leader>co :Telescope tags<cr>
+
+nnoremap <leader>cv :Vista!!<cr>
 
 " Find word under cursor in project.
 nmap <leader>* :Rg <c-r>=expand("<cword>")<cr><cr>
