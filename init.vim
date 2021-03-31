@@ -194,9 +194,12 @@ Plug 'elixir-editors/vim-elixir'
 Plug 'sheerun/vim-polyglot'
 Plug 'vim-test/vim-test'       " Run test suites
 
+" Code navigation
+" Plug 'wellle/context.vim'
+
 " Knowledge management.
-Plug 'vimwiki/vimwiki'
-Plug 'michal-h21/vim-zettel'
+" Plug 'vimwiki/vimwiki'
+" Plug 'michal-h21/vim-zettel'
 
 " Neovim specific hotness
 Plug 'kassio/neoterm'
@@ -339,6 +342,8 @@ tnoremap <c-l> <C-\><C-N><c-w>l
 " Use tab to toggle between most recently looked at buffers.
 nmap <Tab> :b#<CR>
 
+nmap <s-Tab> :tabnext<CR>
+
 " Use leader space to get rid of highlighting after a search)
 nmap <Leader><space> :nohl<cr>
 
@@ -373,15 +378,21 @@ nnoremap <leader>bd :bd<cr>
 
 " Navigate between files in a project!
 nnoremap <leader>sb :Telescope buffers<cr>
-nnoremap <leader>sp :Telescope find_files<cr>
+nnoremap <leader>sp :Telescope find_files theme=get_dropdown<cr>
 nnoremap <leader>sm :Telescope oldfiles<cr>
 nnoremap <leader>sf :Telescope live_grep<cr>
 nnoremap <leader>co :Telescope tags<cr>
+nnoremap <leader>cm :Telescope current_buffer_tags<cr>  
 
 nnoremap <leader>cv :Vista!!<cr>
 
 " Find word under cursor in project.
 nmap <leader>* :Rg <c-r>=expand("<cword>")<cr><cr>
+
+" nmap <leader>* yiw:Telescope live_grep <C-r>"<cr><c-r>=expand("<cword>")<cr><cr>
+
+nnoremap <leader>* :lua require('telescope.builtin').grep_string { search = vim.fn.expand("<cword>"), word_match = "-w", shorten_path = true, only_osrt_text = true}<CR>
+
 
 " Git bindings!
 nnoremap <leader>gs :G<cr><c-n><c-n><c-n>
@@ -397,6 +408,9 @@ nnoremap <leader>gt <Plug>(git-time-lapse)
 
 nnoremap <leader>hN :GitGutterPrevHunk<cr>
 nnoremap <leader>hn :GitGutterNextHunk<cr>
+
+" Notes taking stuff
+nnoremap <leader>n :tab drop tmp/notes.md<CR>
 
 let g:gitgutter_highlight_linenrs=1
 
