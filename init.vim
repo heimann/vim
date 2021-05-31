@@ -382,7 +382,9 @@ nnoremap <leader>sp :Telescope find_files theme=get_dropdown<cr>
 nnoremap <leader>sm :Telescope oldfiles<cr>
 nnoremap <leader>sf :Telescope live_grep<cr>
 nnoremap <leader>co :Telescope tags<cr>
-nnoremap <leader>cm :Telescope current_buffer_tags<cr>  
+nnoremap <leader>cm :Telescope lsp_document_symbols<cr>
+nnoremap <leader>ce :Telescope lsp_document_diagnostics<cr>
+nnoremap <leader>cr :Telescope lsp_references<cr>
 
 nnoremap <leader>cv :Vista!!<cr>
 
