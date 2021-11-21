@@ -157,9 +157,11 @@ unlet autoload_plug_path
 call plug#begin('~/.config/nvim/plugins')
 
 " Plugins - Aesthetics.
-Plug 'wadackel/vim-dogrun'
+" Plug 'wadackel/vim-dogrun'
+Plug 'embark-theme/vim', { 'as': 'embark', 'branch': 'main' }
 Plug 'bronson/vim-trailing-whitespace' " Show trailing whitespace
 Plug 'tpope/vim-commentary'
+" Plug 'josegamez82/starrynight'
 
 " Git Stuff
 Plug 'airblade/vim-gitgutter'
@@ -170,7 +172,10 @@ Plug 'tpope/vim-rhubarb'
 Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
-Plug 'nvim-telescope/telescope-fzy-native.nvim'
+Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make', 'branch': 'main' }
+
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
 
 Plug 'justinmk/vim-sneak'       " Get around in your files.
 Plug 'farmergreg/vim-lastplace' " open files at the last edited place
@@ -179,7 +184,10 @@ Plug 'junegunn/vim-peekaboo'    " See registers when using `'` and `@`
 
 " Neovim LSP
 Plug 'neovim/nvim-lspconfig'
-Plug 'nvim-lua/completion-nvim'
+"Plug 'nvim-lua/completion-nvim'
+Plug 'kyazdani42/nvim-web-devicons'
+Plug 'folke/trouble.nvim', { 'branch': 'main'}
+
 
 " File Navigation
 Plug 'liuchengxu/vista.vim'
@@ -193,11 +201,17 @@ Plug 'ludovicchabant/vim-gutentags' "For tag management
 Plug 'elixir-editors/vim-elixir'
 Plug 'sheerun/vim-polyglot'
 Plug 'vim-test/vim-test'       " Run test suites
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
 
 " Code navigation
-Plug 'hrsh7th/nvim-compe'
+Plug 'hrsh7th/cmp-nvim-lsp', { 'branch': 'main'}
+Plug 'hrsh7th/cmp-buffer', { 'branch': 'main'}
+Plug 'hrsh7th/nvim-cmp', { 'branch': 'main'}
+
+" For vsnip user.
+Plug 'hrsh7th/cmp-vsnip', { 'branch': 'main'}
 Plug 'hrsh7th/vim-vsnip'
-Plug 'hrsh7th/vim-vsnip-integ'
+
 " Plug 'wellle/context.vim'
 Plug 'kshenoy/vim-signature'
 
@@ -225,7 +239,9 @@ unlet plug_install
 " I've been using nightfly for a while. I also make sure to configure the
 " colors in my terminal to use the same basic palette.
 "colorscheme nightfly
-colorscheme dogrun
+ " colorscheme dogrun
+ colorscheme embark
+" colorscheme starrynight
 
 
 " I don't like the default comment highlighting in nightfly, so this changes
@@ -267,10 +283,7 @@ let &statusline = s:statusline_expr()
 
 " -----------------------------------------------------------------------------
 " Behaviours.
-"
-" -----------------------------------------------------------------------------
-
-" If you're in a terminal, you don't want line numbers :)
+" ---------------------------------------------------------------------------- If you're in a terminal, you don't want line numbers :)
 au BufEnter * if &buftype == 'terminal' | :set nonumber | endif
 au BufEnter * if &buftype == 'terminal' | :set nornu | endif
 au BufEnter * if &buftype == 'terminal' | :set nocursorline | endif
@@ -288,6 +301,8 @@ augroup LuaHighlight
   autocmd!
   autocmd TextYankPost * silent! lua require'vim.highlight'.on_yank()
 augroup END
+
+" autocmd CursorHold * lua vim.lsp.diagnostic.show_line_diagnostics({ focusable = false })
 
 " Copy to clipboard in visualmode
 vnoremap <leader>cp "*y<cr>
@@ -312,7 +327,7 @@ endif
 nnoremap <leader>tm :Ttoggle<cr>
 vnoremap <leader>tr :TREPLSendSelection<cr>
 nnoremap <leader>tr :TREPLSendFile<cr>
-let g:neoterm_default_mod = "botright"
+let g:neoterm_default_mod = "vertical"
 let g:neoterm_autoscroll = 1
 
 " Vim-test Settings
@@ -344,9 +359,9 @@ tnoremap <c-h> <C-\><C-N><c-w>h
 tnoremap <c-l> <C-\><C-N><c-w>l
 
 " Use tab to toggle between most recently looked at buffers.
-nmap <Tab> :b#<CR>
+nnoremap <Tab> :b#<CR>
 
-nmap <s-Tab> :tabnext<CR>
+nnoremap <s-Tab> :tabnext<CR>
 
 " Use leader space to get rid of highlighting after a search)
 nmap <Leader><space> :nohl<cr>
@@ -382,9 +397,9 @@ nnoremap <leader>bd :bd<cr>
 
 " Navigate between files in a project!
 nnoremap <leader>sb :Telescope buffers<cr>
-nnoremap <leader>sp :Telescope find_files theme=get_dropdown<cr>
+nnoremap <leader>sp :Files<cr>
 nnoremap <leader>sm :Telescope oldfiles<cr>
-nnoremap <leader>sf :Telescope live_grep<cr>
+nnoremap <leader>sf :Rg<cr>
 nnoremap <leader>co :Telescope tags<cr>
 nnoremap <leader>cm :Telescope lsp_document_symbols<cr>
 nnoremap <leader>ce :Telescope lsp_document_diagnostics<cr>
@@ -423,20 +438,37 @@ let g:gitgutter_highlight_linenrs=1
 let g:vimwiki_list = [{'path':'~/Nextcloud/wiki/', 'syntax': 'markdown', 'ext': '.md'}]
 let g:zettel_fzf_command = "rg --column --line-number --ignore-case --no-heading --color=always "
 
-:lua << EOF
-  require('telescope').load_extension('fzy_native')
-EOF
+set completeopt=menu,menuone,noselect
 
 " LSP Stuff
 " see: https://medium.com/swlh/neovim-lsp-dap-and-fuzzy-finder-60337ef08060
 "
 " -------------------- LSP ---------------------------------
 :lua << EOF
+  local telescope = require('telescope')
+  require("trouble").setup {
+    -- your configuration comes here
+    -- or leave it empty to use the default settings
+    -- refer to the configuration section below
+  }
+
+
+  telescope.setup {
+    extensions = {
+      fzf = {
+        fuzzy = true,
+        override_generic_sorter = true,
+        override_file_sorter = true,
+        case_mode = "smart_case",
+      }
+    }
+  }
+
+  telescope.load_extension('fzf')
+
   local nvim_lsp = require('lspconfig')
 
   local on_attach = function(client, bufnr)
-    require('completion').on_attach()
-
     local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
     local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
 
@@ -455,7 +487,6 @@ EOF
     buf_set_keymap('n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
     buf_set_keymap('n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
     buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
-    buf_set_keymap('n', '<space>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
     buf_set_keymap('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
     buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
     buf_set_keymap('n', '<space>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
@@ -482,55 +513,78 @@ EOF
     end
   end
 
+  local cmp = require'cmp'
+
+  cmp.setup({
+    snippet = {
+      expand = function(args)
+        -- For `vsnip` user.
+        vim.fn["vsnip#anonymous"](args.body)
+
+        -- For `luasnip` user.
+        -- require('luasnip').lsp_expand(args.body)
+
+        -- For `ultisnips` user.
+        -- vim.fn["UltiSnips#Anon"](args.body)
+      end,
+    },
+    mapping = {
+      ['<C-d>'] = cmp.mapping.scroll_docs(-4),
+      ['<C-f>'] = cmp.mapping.scroll_docs(4),
+      ['<C-Space>'] = cmp.mapping.complete(),
+      ['<C-e>'] = cmp.mapping.close(),
+      ['<CR>'] = cmp.mapping.confirm({ select = false }),
+    },
+    sources = {
+      { name = 'nvim_lsp' },
+
+      -- For vsnip user.
+      { name = 'vsnip' },
+
+      -- For luasnip user.
+      -- { name = 'luasnip' },
+
+      -- For ultisnips user.
+      -- { name = 'ultisnips' },
+
+      { name = 'buffer' },
+    }
+  })
+  local util = require 'lspconfig/util'
+
+  vim.lsp.set_log_level("debug")
+
+  require'lspconfig'.tsserver.setup{
+      cmd = { "typescript-language-server", "--stdio" };
+      filetypes = { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" };
+      root_dir = util.root_pattern("package.json", "tsconfig.json", "jsconfig.json", ".git");
+      on_attach = on_attach,
+      capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities()),
+  }
+
   require'lspconfig'.elixirls.setup{
     cmd = { "/Users/david/Code/languageservers/elixir-ls/language_server.sh" };
     on_attach = on_attach,
+    capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities()),
     }
 EOF
 
-" Completion
-let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
-inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-" -------------------- LSP ---------------------------------
-" Use <Tab> and <S-Tab> to navigate through popup menu
-inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-
-" Set completeopt to have a better completion experience
-set completeopt=menuone,noselect
-
-" Avoid showing message extra message when using completion
-set shortmess+=c
-
-" Nvim Compe Settings
-"
-inoremap <silent><expr> <C-p> compe#complete()
-inoremap <silent><expr> <CR>      compe#confirm('<CR>')
-inoremap <silent><expr> <C-e>     compe#close('<C-e>')
-inoremap <silent><expr> <C-f>     compe#scroll({ 'delta': +4 })
-inoremap <silent><expr> <C-d>     compe#scroll({ 'delta': -4 })
+" Treesitter configuration
+lua <<EOF
+require'nvim-treesitter.configs'.setup {
+  ensure_installed = "maintained", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
+  indent = {
+    enable = true
+  },
+  highlight = {
+    enable = true,              -- false will disable the whole extension
+    -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
+    -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
+    -- Using this option may slow down your editor, and you may see some duplicate highlights.
+    -- Instead of true it can also be a list of languages
+    additional_vim_regex_highlighting = true,
+  },
+}
+EOF
 
 
-
-
-let g:compe = {}
-let g:compe.enabled = v:true
-let g:compe.autocomplete = v:true
-let g:compe.debug = v:false
-let g:compe.min_length = 1
-let g:compe.preselect = 'enable'
-let g:compe.throttle_time = 80
-let g:compe.source_timeout = 200
-let g:compe.incomplete_delay = 400
-let g:compe.max_abbr_width = 100
-let g:compe.max_kind_width = 100
-let g:compe.max_menu_width = 100
-let g:compe.documentation = v:true
-
-let g:compe.source = {}
-let g:compe.source.path = v:true
-let g:compe.source.buffer = v:true
-let g:compe.source.calc = v:true
-let g:compe.source.nvim_lsp = v:true
-let g:compe.source.nvim_lua = v:true
-let g:compe.source.vsnip = v:true
